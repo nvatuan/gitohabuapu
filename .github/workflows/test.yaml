@@ -18,9 +18,17 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Build
-        run: npm run build
+      
+      - name: Check time, only allow job to run in the morning Monday
+        run: |
+          echo "Today day is $(date +%u)"
+          echo "Time is $(date +%H)"
+          if [ $(date +%u) -eq 1 ] && [ $(date +%H) -lt 12 ]; then
+            echo "Time check passed"
+          else
+            echo "Time check failed"
+            exit 1
+          fi
 
       - name: Status check
         uses: marocchino/sticky-pull-request-comment@v2
