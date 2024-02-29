@@ -13,6 +13,17 @@ module.exports = (app) => {
     return context.octokit.issues.createComment(issueComment);
   });
 
+  app.on("pull_request.reopened", async (context) => {
+    console.log("123")
+    const now = new Date();
+    console.log("123")
+    const prComment = context.issue({
+      body: "Thanks for opening this pull request! Github Apps Server Time is " + now.toISOString() + " UTC.",
+    });
+    console.log("123")
+    return context.octokit.issues.createComment(prComment);
+  });
+
   // For more information on building apps:
   // https://probot.github.io/docs/
 
