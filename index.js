@@ -17,11 +17,12 @@ module.exports = (app) => {
     console.log("123")
     const now = new Date();
     console.log("123")
-    const prComment = context.issue({
+    const pullReview = context.pullRequest({
       body: "Thanks for opening this pull request! Github Apps Server Time is " + now.toISOString() + " UTC.",
+      event: "APPROVE"
     });
-    console.log("123")
-    return context.octokit.issues.createComment(prComment);
+
+    return context.octokit.pulls.createReview(pullReview);
   });
 
   // For more information on building apps:
