@@ -1,0 +1,42 @@
+name: Status Check
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Check time for cron job running
+        run: |
+          # If hour is even number, then fail. Because cronjobs are running every even hour
+          echo "Today day is $(date +%u)"
+          echo "Time is $(date +%H)"
+
+          if [ $(( $(date +%H) % 2 )) -eq 0 ]; then
+            echo "Even hour, fail."
+            exit 1
+          else
+            echo "Odd hour, pass"
+          fi
+
+
+      - name: Status check
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: "Status check passed"
+          check_name: "Status Check"
+          status: "completed"
+          conclusion: "success"
