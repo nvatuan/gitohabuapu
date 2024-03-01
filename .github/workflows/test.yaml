@@ -1,42 +1,23 @@
-name: Status Check
-
+name: Block Merge Based on Time
 on:
-  push:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - labeled
+      - unlabeled
+  schedule:
+    - cron: "*/30 * * * *"
 
 jobs:
-  build:
+  block:
+    permissions: write-all
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - uses: yykamei/block-merge-based-on-time@main
         with:
-          node-version: 14
-
-      - name: Install dependencies
-        run: npm install
-      
-      - name: Check time for cron job running
-        run: |
-          # If hour is even number, then fail. Because cronjobs are running every even hour
-          echo "Today day is $(date +%u)"
-          echo "Time is $(date +%H)"
-
-          if [ $(( $(date +%H) % 2 )) -eq 0 ]; then
-            echo "Even hour, fail."
-            exit 1
-          else
-            echo "Odd hour, pass"
-          fi
-
-
-      - name: Status check
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          message: "Status check passed"
-          check_name: "Status Check"
-          status: "completed"
-          conclusion: "success"
+          timezone: Asia/Tokyo
+          after: "14:20 on Friday"
+          before: 09:00
+          base-branches: "(default)"
