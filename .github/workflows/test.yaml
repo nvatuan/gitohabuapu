@@ -24,10 +24,11 @@ jobs:
           echo "Today day is $(date +%u)"
           echo "Time is $(date +%H)"
           if [ $(date +%u) -eq 1 ] && [ $(date +%H) -lt 12 ]; then
-            echo "Time check passed"
-          else
             echo "Time check failed"
+            echo "It is checking time. Release not allowed"
             exit 1
+          else
+            echo "Time check passed"
           fi
 
       - name: Status check
