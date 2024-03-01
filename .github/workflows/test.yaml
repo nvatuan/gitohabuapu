@@ -19,17 +19,19 @@ jobs:
       - name: Install dependencies
         run: npm install
       
-      - name: Check time, only allow job to run in the morning Monday
+      - name: Check time for cron job running
         run: |
+          # If hour is even number, then fail. Because cronjobs are running every even hour
           echo "Today day is $(date +%u)"
           echo "Time is $(date +%H)"
-          if [ $(date +%u) -eq 1 ] && [ $(date +%H) -lt 12 ]; then
-            echo "Time check failed"
-            echo "It is checking time. Release not allowed"
+
+          if [ $(( $(date +%H) % 2 )) -eq 0 ]; then
+            echo "Even hour, fail."
             exit 1
           else
-            echo "Time check passed"
+            echo "Odd hour, pass"
           fi
+
 
       - name: Status check
         uses: marocchino/sticky-pull-request-comment@v2
