@@ -12,6 +12,7 @@ on:
 
 jobs:
   block:
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - uses: yykamei/block-merge-based-on-time@main
